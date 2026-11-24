@@ -80,7 +80,34 @@ private:
 
     void redimensionar([[maybe_unused]] size_t tamanhoNovo)
     {
-        throw std::runtime_error("Método ainda não implementado.");
+        auto antigoArray = this->array;
+        auto capacidadeAntiga = this->capacidade;
+
+        this->capacidade = tamanhoNovo;
+        auto novoArray = new Elemento[tamanhoNovo];
+
+        for (int delta=0; delta<capacidadeAntiga; delta++) {
+            
+
+            if (antigoArray[delta].estado == Estado::OCUPADO) {
+                for (int omega=0; omega<this->capacidade; omega++) {
+                    auto valorHash = this->valorHash(antigoArray[delta].chave);
+                    auto indice = (valorHash+omega)%capacidade;
+
+                    if (novoArray[indice].estado == Estado::OCUPADO && novoArray[indice].chave == antigoArray[delta].chave) {
+                        novoArray[indice].valor = antigoArray[delta].valor;
+                    } 
+                    else if (novoArray[indice].estado == Estado::LIVRE) {
+                        novoArray[indice].chave = antigoArray[delta].chave;
+                        novoArray[indice].valor = antigoArray[delta].valor;
+                        novoArray[indice].chave = antigoArray[delta].chave;
+                    }
+                }
+            }
+            
+        }
+        this->array = novoArray;
+        delete [] antigoArray;
     }
 
 public:
@@ -101,7 +128,14 @@ public:
 
     bool remover([[maybe_unused]] const std::string& chave)
     {
-        throw std::runtime_error("Método ainda não implementado.");
+        auto valorHash = this->valorHash(chave);
+
+        for (int delta = 0; delta<capacidade; delta++) {
+            auto indice = (valorHash+delta) % capacidade;
+            auto& elemento = this->array[indice];
+
+            
+        }
     }
 
     std::optional<std::string> buscar([[maybe_unused]] const std::string& chave) const
